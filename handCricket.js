@@ -28,17 +28,67 @@ let ballSpan = document.getElementById("ball")
 let totalOverParentSpan = document.getElementById("totalOverParent")
 let totalOverSpan = document.getElementById("totalOver")
 
-let winSound = new Audio("../Audio/childrenApplause.mp3")
-let whistleSound = new Audio("../Audio/whistle.wav")
-let awwSound = new Audio("../Audio/awwSound.mp3")
+// Preload audio files with error handling
+const winSound = new Audio("./audio/childrenApplause.mp3")
+const whistleSound = new Audio("./audio/whistle.wav")
+const awwSound = new Audio("./audio/awwSound.mp3")
+
+// Error handling for audio files
+const audioFiles = [winSound, whistleSound, awwSound]
+audioFiles.forEach((audio) => {
+    audio.addEventListener("error", function () {
+        console.error(`Error loading audio file: ${audio.src}`)
+    })
+})
+
+// Game settings
+let gameDifficulty = "medium"
+let soundEnabled = true
+let animationsEnabled = true
 
 // ------------------------ Show Functions STARTS ---------------------
 let showPlayInfo = () => {
     howToPlayDiv.classList.remove("close")
 }
 let closePlayInfo = () => {
-    // let closeBtn = document.getElementById("close")
     howToPlayDiv.classList.add("close")
+}
+
+let showSettings = () => {
+    welcomeContainerDiv.style.display = "none"
+    document.getElementById("settings-container").style.display = "flex"
+
+    // Load saved settings if available
+    if (localStorage.getItem("handCricketSettings")) {
+        const settings = JSON.parse(localStorage.getItem("handCricketSettings"))
+        document.getElementById("difficulty").value =
+            settings.difficulty || "medium"
+        document.getElementById("animations").value = settings.animations
+            ? "on"
+            : "off"
+        document.getElementById("sound").value = settings.sound ? "on" : "off"
+    }
+}
+
+let saveSettings = () => {
+    gameDifficulty = document.getElementById("difficulty").value
+    animationsEnabled = document.getElementById("animations").value === "on"
+    soundEnabled = document.getElementById("sound").value === "on"
+
+    // Save settings to localStorage
+    const settings = {
+        difficulty: gameDifficulty,
+        animations: animationsEnabled,
+        sound: soundEnabled,
+    }
+    localStorage.setItem("handCricketSettings", JSON.stringify(settings))
+
+    // Apply settings
+    showAnimation = animationsEnabled
+
+    // Return to welcome screen
+    document.getElementById("settings-container").style.display = "none"
+    welcomeContainerDiv.style.display = "flex"
 }
 
 let showSelectOver = () => {
@@ -159,11 +209,11 @@ let startGameLogic = (choosed, selectedOver) => {
 }
 
 let getCompRun = (who, select) => {
+    // Basic runs distribution
     let runs = [1, 2, 3, 4, 4, 5, 5, 6, 6, 6]
     let emojRuns = ["☝", "🤘", "👌", "👊", "👊", "🖐", "🖐", "👍", "👍", "👍"]
-    let randRuns = Math.floor(Math.random() * runs.length)
-    let compRuns = runs[randRuns]
-    let emojCompRuns = emojRuns[randRuns]
+
+    // Smart runs distribution (medium difficulty)
     let smartRuns = [1, 2, 3, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 6]
     let emojSmartRuns = [
         "☝",
@@ -179,20 +229,76 @@ let getCompRun = (who, select) => {
         "👍",
         "👍",
         "👍",
+        "�",
+    ]
+
+    // Hard difficulty - more strategic choices
+    let hardRuns = [1, 1, 2, 3, 4, 4, 5, 5, 6, 6]
+    let emojHardRuns = [
+        "☝",
+        "☝",
+        "🤘",
+        "👌",
+        "👊",
+        "👊",
+        "🖐",
+        "🖐",
+        "👍",
         "👍",
     ]
-    let smartRandRuns = Math.floor(Math.random() * smartRuns.length)
-    let smartCompRuns = smartRuns[smartRandRuns]
-    let emojSmartCompRuns = emojSmartRuns[smartRandRuns]
+
+    // Easy difficulty - more predictable
+    let easyRuns = [1, 2, 3, 3, 4, 4, 5, 5, 6, 6]
+    let emojEasyRuns = [
+        "☝",
+        "🤘",
+        "�",
+        "👌",
+        "👊",
+        "👊",
+        "🖐",
+        "🖐",
+        "👍",
+        "👍",
+    ]
+
+    let selectedRuns, selectedEmojis
+
+    // Select the appropriate difficulty
     if (
         (who == "you" && select == "Bat") ||
         (who == "comp" && select == "Ball")
     ) {
-        compMoveShowDiv.innerText = emojSmartCompRuns
-        return smartCompRuns
+        // Computer is bowling - use difficulty settings
+        switch (gameDifficulty) {
+            case "easy":
+                selectedRuns = easyRuns
+                selectedEmojis = emojEasyRuns
+                break
+            case "hard":
+                selectedRuns = hardRuns
+                selectedEmojis = emojHardRuns
+                break
+            case "medium":
+            default:
+                selectedRuns = smartRuns
+                selectedEmojis = emojSmartRuns
+                break
+        }
+    } else {
+        // Computer is batting - use regular distribution
+        selectedRuns = runs
+        selectedEmojis = emojRuns
     }
-    compMoveShowDiv.innerText = emojCompRuns
-    return compRuns
+
+    // Get random run based on selected difficulty
+    let randIndex = Math.floor(Math.random() * selectedRuns.length)
+    let compRun = selectedRuns[randIndex]
+    let emojCompRun = selectedEmojis[randIndex]
+
+    // Update display
+    compMoveShowDiv.innerText = emojCompRun
+    return compRun
 }
 
 let chaseBtnDiv = document.getElementById("chaseBtnDiv")
@@ -433,19 +539,68 @@ let compTotalRunSpan = document.getElementById("compTotalRun")
 let yourTotalWicketSpan = document.getElementById("yourTotalWicket")
 let compTotalWicketSpan = document.getElementById("compTotalWicket")
 
+// Game statistics
+let gameStats = {
+    gamesPlayed: 0,
+    playerWins: 0,
+    playerLosses: 0,
+    gameTies: 0,
+    highestScore: 0,
+}
+
+// Load stats from localStorage if available
+const loadGameStats = () => {
+    const savedStats = localStorage.getItem("handCricketStats")
+    if (savedStats) {
+        gameStats = JSON.parse(savedStats)
+    }
+}
+
+// Save stats to localStorage
+const saveGameStats = () => {
+    localStorage.setItem("handCricketStats", JSON.stringify(gameStats))
+}
+
+// Initialize stats
+loadGameStats()
+
 let modalShow = (whoWon, remainWickOrRun, wickOrRun, secondInningsScore) => {
     document.body.classList.add("active")
+
+    // Update game statistics
+    gameStats.gamesPlayed++
+
     if (whoWon == "Tie") {
         whoWonSpan.innerText = "It's "
         wonOrTieSpan.innerText = "a TIE"
         remainWickOrRunSpan.style.display = "none"
         wickOrRunSpan.style.display = "none"
-        // console.log("TIE")
+        gameStats.gameTies++
     } else {
         whoWonSpan.innerText = whoWon
         remainWickOrRunSpan.innerText = remainWickOrRun
         wickOrRunSpan.innerText = wickOrRun
+
+        if (whoWon === "you") {
+            gameStats.playerWins++
+            if (soundEnabled) {
+                winSound.play().catch((error) => {
+                    console.error("Error playing sound:", error)
+                })
+            }
+        } else if (whoWon === "comp") {
+            gameStats.playerLosses++
+        }
     }
+
+    // Update highest score
+    const yourScore = parseInt(yourTotalRunSpan.innerText || 0)
+    if (yourScore > gameStats.highestScore) {
+        gameStats.highestScore = yourScore
+    }
+
+    // Save updated stats
+    saveGameStats()
 
     if (logo.innerText == "💻" && whoBat.innerText == "Comp") {
         compTotalRunSpan.innerText = secondInningsScore
@@ -460,6 +615,48 @@ let modalShow = (whoWon, remainWickOrRun, wickOrRun, secondInningsScore) => {
     }
 }
 
+// Show statistics modal
+const showStats = () => {
+    document.getElementById("gamesPlayed").innerText = gameStats.gamesPlayed
+    document.getElementById("playerWins").innerText = gameStats.playerWins
+    document.getElementById("playerLosses").innerText = gameStats.playerLosses
+    document.getElementById("gameTies").innerText = gameStats.gameTies
+
+    // Calculate win rate
+    const winRate =
+        gameStats.gamesPlayed > 0
+            ? Math.round((gameStats.playerWins / gameStats.gamesPlayed) * 100)
+            : 0
+    document.getElementById("winRate").innerText = winRate + "%"
+
+    document.getElementById("highestScore").innerText = gameStats.highestScore
+
+    // Show stats modal
+    document.getElementById("statsModal").style.display = "flex"
+    document.getElementById("statsModal").classList.add("active")
+}
+
+// Close statistics modal
+const closeStats = () => {
+    document.getElementById("statsModal").classList.remove("active")
+    setTimeout(() => {
+        document.getElementById("statsModal").style.display = "none"
+    }, 300)
+}
+
+// Reset statistics
+const resetStats = () => {
+    gameStats = {
+        gamesPlayed: 0,
+        playerWins: 0,
+        playerLosses: 0,
+        gameTies: 0,
+        highestScore: 0,
+    }
+    saveGameStats()
+    showStats() // Refresh the display
+}
+
 let modalResetGame = () => {
     document.body.classList.remove("active")
     // reset();
@@ -471,14 +668,23 @@ let modalResetGame = () => {
 }
 
 let playAwwSound = () => {
-    setTimeout(() => {
-        awwSound.play()
-    }, 400)
+    if (soundEnabled) {
+        setTimeout(() => {
+            awwSound.play().catch((error) => {
+                console.error("Error playing sound:", error)
+            })
+        }, 400)
+    }
 }
+
 let playWhistleSound = () => {
-    setTimeout(() => {
-        whistleSound.play()
-    }, 500)
+    if (soundEnabled) {
+        setTimeout(() => {
+            whistleSound.play().catch((error) => {
+                console.error("Error playing sound:", error)
+            })
+        }, 500)
+    }
 }
 
 let reset = () => {
