@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hand Cricket</title>
+    <link rel="stylesheet" href="handCricket.css">
+</head>
+
+<body>
+    <!-- ---------------------- HEADER SECTION ------------------- -->
+    <header>
+        <nav>
+            <h1>Hand Cricket</h1>
+        </nav>
+    </header>
+
+    <!-- ---------------------- HERO SECTION ------------------- -->
+
+    <main class="all-flex">
+        <div class="container">
+            <div id="highlight" class="highlight popUp">
+                <h1 id="slide" class="slide">Wicket</h1>
+            </div>
+            <div id="howToPlay" class="howToPlay popUp close">
+                <div class="howToPlay-modal flex-col">
+                    <button id="close" class="close-btn btn" onclick="closePlayInfo()">&#215</button>
+                    <h3>How To Play</h3>
+                    <ol>
+                        <li>To score runs, click on the desired run from (1 to 6) you wish to score</li>
+                        <li>The comp also chooses a random run between (1 to 6).</li>
+                        <li>If the run choosed by the Batsman and the Baller are the same then a Wicket will fall, else the runs are increased for the batsman by the run choosed. </li>
+                        <li>Each Player has 10 Wickets.</li>
+                        <li>One who scores maximum runs wins.</li>
+                    </ol>
+                    <p class="text-center m-y"><b>All the Best😉</b></p>
+                </div>
+            </div>
+            <div class="all-gameWrapper select-none ">
+                <div id="welcome-container" class="all-flex flex-col gap">
+                    <h3 class="text-center">Welcome to Hand Cricket</h3>
+                    <button class="btn" onclick="showSelectOver()">Start Game</button>
+                    <button class="playInfo btn" onclick="showPlayInfo()">?</button>
+                </div>
+                <div id="select-over" class="all-flex flex-col gap">
+                    <h3>Select Over</h3>
+                    <div class="Over-container all-flex gap">
+                        <button class="Over-btn btn" value="1">1</button>
+                        <button class="Over-btn btn" value="2">2</button>
+                        <button class="Over-btn btn" value="5">5</button>
+                    </div>
+                </div>
+
+                <div id="select-toss" class="all-flex flex-col gap">
+                    <h3>Select Toss</h3>
+                    <div class="toss-container all-flex gap">
+                        <button class="toss-btn btn" value="Heads">Heads</button>
+                        <button class="toss-btn btn" value="Tails">Tails</button>
+                    </div>
+                </div>
+
+                <div id="whoWonToss" class="all-flex flex-col gap">
+                    <h3><span id="tossResult" class="tossResult"></span> won the toss</h3>
+                    <div id="player-won" class="all-flex flex-col gap">
+                        <h3>Select</h3>
+                        <div class="batOrball all-flex gap">
+                            <button class="htBtn btn" value="Bat">Bat</button>
+                            <button class="htBtn btn" value="Ball">Ball</button>
+                        </div>
+                    </div>
+                    <div id="comp-won">
+                        <h3>Opted To <span id="compOpt" class="sltBlue"></span> first</h3>
+                        <button class="btn m-y" onclick="showPlayGameArea()">Continue</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="playGameArea">
+                <div id="runs-btn" class="runs-btn">
+                    <div class="first-row all-flex gap m-y">
+                        <button class="runBtn btn" value="1">☝</button>
+                        <button class="runBtn btn" value="2">🤘</button>
+                        <button class="runBtn btn" value="3">👌</button>
+                    </div>
+                    <div class="second-row all-flex gap m-y">
+                        <button class="runBtn btn" value="4">👊</button>
+                        <button class="runBtn btn" value="5">🖐</button>
+                        <button class="runBtn btn" value="6">👍</button>
+                    </div>
+                </div>
+                <div id="chaseBtnDiv" class="select-none">
+                    <p class="text-center">1st Innings: <b><span id="fstRuns"></span></b> / <b><span id="fstWick"></span></b></p>
+                    <button id="chase-btn" class="btn m-y">Continue</button>
+                </div>  
+                <div id="chaseRuns-btn" class="secRuns-btn">
+                    <div class="runsRequired text-center select-none"><h3><span id="whoNeeds"></span> need <span id="hmRun" class="darkBlackBlue">-</span> runs in <span id="hmBall" class="darkBlackBlue">-</span> balls</h3></div>
+                    <!-- hm = howMuch -->
+                    <div class="first-row all-flex gap m-y">
+                        <button class="secRunBtn btn" value="1">☝</button>
+                        <button class="secRunBtn btn" value="2">🤘</button>
+                        <button class="secRunBtn btn" value="3">👌</button>
+                    </div>
+                    <div class="second-row all-flex gap m-y">
+                        <button class="secRunBtn btn" value="4">👊</button>
+                        <button class="secRunBtn btn" value="5">🖐</button>
+                        <button class="secRunBtn btn" value="6">👍</button>
+                    </div>
+                </div>
+                <div id="moveShow" class="moveShow all-flex gap select-none">
+                    <div class="yourMove all-flex flex-col gap-5">
+                        <h4 class="move">Your Move</h4>
+                        <div id="yourMoveShow" class="btn text-center">-</div>
+                    </div>
+                    <h4 class="t-y-50">VS</h4>
+                    <div class="compMove all-flex flex-col gap-5">
+                        <h4 class="move">Comp Move</h4>
+                        <div id="compMoveShow" class="btn text-center">-</div>
+                    </div>
+                </div>
+            </div>
+            <div id="modalBox" class="modalBox all-flex">
+                <div id="modal" class="modal all-flex flex-col gap">
+                    <h3 id="allWon"><span id="whoWon" class="won-color"></span><span id="wonOrTie"> Won by </span><span id="remainWickOrRun"></span> <span id="wickOrRun"></span></h3>
+                    <div id="modalScoreCard" class="modalScoreCard all-flex flex-col">
+                        <p class="scoreCard sltBlue">Score Card</p>
+                        <p>Your Score: <b><span id="yourTotalRun"></span></b> / <b><span id="yourTotalWicket"></span></b> <b>(<span id="youOverPlayed"></span></b>.<b><span id="youBallPlayed"></span>)</b></p>
+                        <p>Comp Score: <b><span id="compTotalRun"></span></b> / <b><span id="compTotalWicket"></span></b> <b>(<span id="compOverPlayed"></span></b>.<b><span id="compBallPlayed"></span>)</b></p>
+                    </div>
+                    <button id="modalRestartBtn" class="restart-btn" onclick="modalResetGame()">Play Again</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ---------------------- FOOTER SECTION ------------------- -->
+    <footer>
+        <div class="foot-container all-flex ">
+            <div class="score-wrapper all-flex select-none">
+                <div><h3 id="logo"></h3></div>
+                <div class="bg-true"><h3 id="whoBat">You/Comp</h3></div>
+                <div><h3 class="all-flex "><span id="score">0</span> / <span id="wicket">0</span></h3></div>
+                <div id="overs" class="bg-true"><h3 class="all-flex gap-5"><span><span id="over">0</span>.<span id="ball">0 </span></span> <span id="totalOverParent">(<span id="totalOver">0</span>.0)</span></h3></div>
+            </div>
+            <div class="love bg-true">
+                <h3>Made with <span class="heart">❤</span></h3>
+            </div>
+            
+        </div>
+
+    </footer>
+
+    <script src="HandCricket.js"></script>
+    <script src="../confetti.min.js"></script>
+</body>
+
+</html>

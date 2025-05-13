@@ -1,0 +1,302 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: poppins;
+}
+
+body{
+    height: 100vh;
+    background-color: #edf2f7;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+}
+
+:root{
+    /* --shadow: 6px 6px 12px rgb(0,0,0,0.08),-6px -6px 12px rgb(255,255,255,1); */
+    --shadow: 5px 5px 12px rgba(0, 0, 0, 0.08), -5px -5px 10px rgba(255, 255, 255, 0.895);
+    --modal-shadow: 5px 5px 12px rgba(0, 0, 0, 0.08), -5px -5px 10px rgba(245, 245, 245, 0.9);
+}
+
+/* --------------- Utils Classes STARTS ----------------- */
+.text-center{text-align: center;}
+.all-flex{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.flex-col{
+    flex-direction: column;
+}
+.gap-5{gap: 5px;}
+.gap{
+    gap: 15px;
+}
+.dis-none{
+    display: none;
+}
+.m-y{
+    margin: 15px 0;
+}
+.select-none{
+    user-select: none;
+}
+.won-color{
+    color: green;
+}
+.lost-color{
+    color: red;
+}
+.sltBlue{
+    color: slateblue;
+}
+.darkBlackBlue{
+    color: #325f9d;
+}
+.bg-true{
+    background-color: rgb(78, 111, 221);
+    color: white;
+}
+.t-y-50{
+    transform: translateY(50%);
+}
+
+/* --------------- Utils Classes ENDS ----------------- */
+
+header, footer{
+    background-color: white;
+    width: 100vw;
+    box-shadow: var(--shadow);
+    display: grid;
+    place-items: center;
+}
+
+header nav{
+    color: #2e62c1;
+    padding: 12px 8px;
+}
+main{
+    height: 75vh;
+    width: 100vw;
+}
+.container{
+    background-color: #f2f1f1;
+    box-shadow: var(--shadow);
+    width: 60vw;
+    height: 65vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+.moveShow{transform: translateY(30px);}
+button, .moveShow .btn{
+    cursor: pointer;
+    padding: 12px 15px;
+    box-shadow: var(--shadow);
+    background-color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #4a95ff;
+    width: 100%;
+    user-select: none;
+}
+button:hover{
+    border: 1px solid #4a95ff;
+    background-color: #b2dfff;
+}
+.playInfo{
+    position: absolute;
+    top: 2%;
+    right: 2%;
+    width: fit-content;
+    padding: 8px 17px;
+    border-radius: 50%;
+    font-size: 18px;
+}
+.moveShow .btn{
+    cursor: auto;
+    font-size: 17px;
+    width: 45px;
+    padding: 8px 12px;
+}
+.Over-btn{
+    padding: 12px 25px;
+}
+.runBtn, .secRunBtn{
+    font-size: 20px;
+    width: 55px;
+}
+
+#select-over, #totalOverParent, #select-toss, #whoWonToss, #player-won, #comp-won, #playGameArea, #chaseBtnDiv, #chaseRuns-btn{
+    display: none;
+}
+#chaseBtnDiv p{
+    font-size: 18px;
+}
+.tossResult{
+    color: green;
+}
+
+.foot-container{
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.score-wrapper div, .love{
+    padding: 8px 15px;
+}
+.love{
+    width: 100%;
+    text-align: center;
+    border-left: 2px solid rgb(255, 252, 252);
+    letter-spacing: 1.5px;
+}
+.heart{
+    color: red;
+}
+
+.popUp{
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    background-color: #ecececde;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+.highlight{
+    opacity: 0;
+    pointer-events: none;
+    z-index: 5;
+}
+.highlight h1{
+    color: red;
+    width: 100%;
+    font-size: 50px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transform: translateX(-20%);
+    user-select: none;
+}
+
+.active-high{
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.active-high .slide{
+    animation: slider 1.5s 1 cubic-bezier(0.29, 0.87, 0.88, 0.22) forwards;
+    /* animation: slider 1.5s 1 cubic-bezier(0.29, 0.87, 0.94, 0.19) forwards; */
+}
+
+@keyframes slider{
+    100%{
+        transform: translateX(100%);
+    }
+}
+
+.howToPlay{
+    justify-content: center;
+    z-index: 4;
+}
+/* .howToPlay b{
+    color: #325f9d;
+} */
+.close{
+    opacity: 0;
+    pointer-events: none;
+}
+.close-btn{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: fit-content;
+    padding: 4px 12px;
+    border-radius: 3px;
+    font-size: 19px;
+    color: white;
+    background-color: #f25959;
+}
+.close-btn:hover{background-color: #ed4141;border: none;}
+.close .howToPlay-modal{
+    transform: scale(0.3);
+}
+.howToPlay-modal{
+    position: relative;
+    width: 40vw;
+    padding: 15px 35px;
+    background-color: #f9f9f9;
+    box-shadow: var(--modal-shadow);
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    transition: transform 0.3s ease;
+    transform: scale(1);
+}
+.modalBox{
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    background-color: #ecececde;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.modal{
+    width: 45vw;
+    height: 50vh;
+    padding: 12px 15px;
+    background-color: #f9f9f9;
+    box-shadow: var(--modal-shadow);
+    border-radius: 5px;
+    transform: scale(0.3);
+    transition: transform 0.3s ease;
+}
+
+#whoWon{
+    text-transform: capitalize;
+}
+.modalScoreCard .scoreCard{
+    font-weight: 600;
+    font-size: 18px;
+}
+.modal button{
+    width: fit-content;
+    font-size: 15px;
+}
+.active .modal{
+    transform: scale(1.2);
+}
+.active .modalBox{
+    opacity: 1;
+    pointer-events: auto;
+}
+
+@media (max-width:953px){.howToPlay-modal{width: 60vw;}}
+@media (max-width:765px){
+    .howToPlay-modal{width: 70vw;font-size: 15px;}
+}
+@media (max-width:615px){
+    .container{
+        width: 75vw;
+    }
+    .modal{
+        width: 70vw;
+    }.highlight h1{transform: translateX(-50%);}.score-wrapper div, .love{
+        padding: 8px 8px;font-size: 11px;
+    }.howToPlay-modal{width: 72vw;}.active .modal{transform: scale(1);}
+}
+@media (max-width:540px){
+    .container{width: 90vw;}.modal{width: 85vw;}.move{font-size: 12px;}.highlight h1{font-size: 30px;transform: translateX(-35%);}.howToPlay-modal{width: 93vw;font-size: 14px;}
+}
