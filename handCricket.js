@@ -46,6 +46,52 @@ let gameDifficulty = "medium"
 let soundEnabled = true
 let animationsEnabled = true
 
+// Initialize settings from localStorage
+const initializeSettings = () => {
+    if (localStorage.getItem("handCricketSettings")) {
+        const settings = JSON.parse(localStorage.getItem("handCricketSettings"))
+
+        // Load game settings
+        gameDifficulty = settings.difficulty || "medium"
+        soundEnabled = settings.sound !== undefined ? settings.sound : true
+        animationsEnabled =
+            settings.animations !== undefined ? settings.animations : true
+
+        // Apply theme if saved
+        if (settings.theme) {
+            applyTheme(settings.theme)
+        }
+    }
+}
+
+// Handle loading screen
+const hideLoadingScreen = () => {
+    const loadingScreen = document.getElementById("loading-screen")
+    if (loadingScreen) {
+        setTimeout(() => {
+            loadingScreen.classList.add("hidden")
+            setTimeout(() => {
+                loadingScreen.style.display = "none"
+            }, 500)
+        }, 1500) // Show loading screen for 1.5 seconds
+    }
+}
+
+// Set up theme toggle button
+const setupThemeToggle = () => {
+    const themeToggleBtn = document.getElementById("theme-toggle-btn")
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener("click", toggleTheme)
+    }
+}
+
+// Call initialization function when page loads
+document.addEventListener("DOMContentLoaded", () => {
+    initializeSettings()
+    hideLoadingScreen()
+    setupThemeToggle()
+})
+
 // ------------------------ Show Functions STARTS ---------------------
 let showPlayInfo = () => {
     howToPlayDiv.classList.remove("close")
@@ -55,8 +101,7 @@ let closePlayInfo = () => {
 }
 
 let showSettings = () => {
-    welcomeContainerDiv.style.display = "none"
-    document.getElementById("settings-container").style.display = "flex"
+    document.getElementById("settingsModal").classList.remove("close")
 
     // Load saved settings if available
     if (localStorage.getItem("handCricketSettings")) {
@@ -67,28 +112,73 @@ let showSettings = () => {
             ? "on"
             : "off"
         document.getElementById("sound").value = settings.sound ? "on" : "off"
+
+        // Load theme setting
+        if (settings.theme) {
+            document.getElementById("theme").value = settings.theme
+        }
     }
+}
+
+let closeSettings = () => {
+    document.getElementById("settingsModal").classList.add("close")
 }
 
 let saveSettings = () => {
     gameDifficulty = document.getElementById("difficulty").value
     animationsEnabled = document.getElementById("animations").value === "on"
     soundEnabled = document.getElementById("sound").value === "on"
+    const selectedTheme = document.getElementById("theme").value
+
+    // Apply theme
+    applyTheme(selectedTheme)
 
     // Save settings to localStorage
     const settings = {
         difficulty: gameDifficulty,
         animations: animationsEnabled,
         sound: soundEnabled,
+        theme: selectedTheme,
     }
     localStorage.setItem("handCricketSettings", JSON.stringify(settings))
 
     // Apply settings
     showAnimation = animationsEnabled
 
-    // Return to welcome screen
-    document.getElementById("settings-container").style.display = "none"
-    welcomeContainerDiv.style.display = "flex"
+    // Close settings modal
+    closeSettings()
+}
+
+// Function to apply theme
+const applyTheme = (theme) => {
+    // Remove all theme classes first
+    document.body.classList.remove("dark-theme")
+
+    // Apply the selected theme
+    if (theme === "dark") {
+        document.body.classList.add("dark-theme")
+    }
+    // Light theme is default (no class needed)
+
+    // Update theme in settings dropdown if it exists
+    const themeSelect = document.getElementById("theme")
+    if (themeSelect) {
+        themeSelect.value = theme
+    }
+
+    // Save the theme to localStorage
+    const settings = JSON.parse(
+        localStorage.getItem("handCricketSettings") || "{}"
+    )
+    settings.theme = theme
+    localStorage.setItem("handCricketSettings", JSON.stringify(settings))
+}
+
+// Function to toggle theme
+const toggleTheme = () => {
+    const isDarkTheme = document.body.classList.contains("dark-theme")
+    const nextTheme = isDarkTheme ? "light" : "dark"
+    applyTheme(nextTheme)
 }
 
 let showSelectOver = () => {
@@ -229,7 +319,7 @@ let getCompRun = (who, select) => {
         "👍",
         "👍",
         "👍",
-        "�",
+        "👍",
     ]
 
     // Hard difficulty - more strategic choices
@@ -252,7 +342,7 @@ let getCompRun = (who, select) => {
     let emojEasyRuns = [
         "☝",
         "🤘",
-        "�",
+        "👌",
         "👌",
         "👊",
         "👊",

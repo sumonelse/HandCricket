@@ -13,13 +13,22 @@
     <!-- ---------------------- HEADER SECTION ------------------- -->
     <header>
         <nav>
-            <h1>Hand Cricket</h1>
+            <div class="header-content">
+                <h1>Hand Cricket</h1>
+                <div class="theme-toggle">
+                    <button id="theme-toggle-btn" class="theme-btn" title="Toggle Theme">🌓</button>
+                </div>
+            </div>
         </nav>
     </header>
 
     <!-- ---------------------- HERO SECTION ------------------- -->
 
     <main class="all-flex">
+        <div id="loading-screen" class="loading-screen">
+            <div class="cricket-ball"></div>
+            <p>Loading Game...</p>
+        </div>
         <div class="container">
             <div id="highlight" class="highlight popUp">
                 <h1 id="slide" class="slide">Wicket</h1>
@@ -39,47 +48,57 @@
                     <p class="text-center m-y"><b>All the Best😉</b></p>
                 </div>
             </div>
+            <div id="settingsModal" class="settingsModal popUp close">
+                <div class="settings-modal flex-col">
+                    <button id="closeSettings" class="close-btn btn" onclick="closeSettings()">&#215</button>
+                    <h3>Game Settings</h3>
+                    <div class="settings-options-container">
+                        <div class="settings-option">
+                            <label for="difficulty">Difficulty:</label>
+                            <select id="difficulty" class="settings-select">
+                                <option value="easy">Easy</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="hard">Hard</option>
+                            </select>
+                        </div>
+                        <div class="settings-option">
+                            <label for="animations">Animations:</label>
+                            <select id="animations" class="settings-select">
+                                <option value="on" selected>On</option>
+                                <option value="off">Off</option>
+                            </select>
+                        </div>
+                        <div class="settings-option">
+                            <label for="sound">Sound:</label>
+                            <select id="sound" class="settings-select">
+                                <option value="on" selected>On</option>
+                                <option value="off">Off</option>
+                            </select>
+                        </div>
+                        <div class="settings-option">
+                            <label for="theme">Theme:</label>
+                            <select id="theme" class="settings-select">
+                                <option value="light" selected>Light</option>
+                                <option value="dark">Dark</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div
+                        style="width: 100%; display: flex; justify-content: center; margin-top: 20px; margin-bottom: 20px;">
+                        <button class="btn save-settings-btn" onclick="saveSettings()">Save Settings</button>
+                    </div>
+                </div>
+            </div>
             <div class="all-gameWrapper select-none ">
                 <div id="welcome-container" class="all-flex flex-col gap">
                     <h3 class="text-center">Welcome to Hand Cricket</h3>
-                    <button class="btn" onclick="showSelectOver()">Start Game</button>
-                    <button class="btn" onclick="showSettings()">Settings</button>
-                    <button class="playInfo btn" onclick="showPlayInfo()">?</button>
+                    <button class="btn start-game-btn" onclick="showSelectOver()">Start Game</button>
+                    <div class="button-group">
+                        <button class="icon-btn settings-icon" onclick="showSettings()" title="Settings">⚙️</button>
+                        <button class="icon-btn help-icon" onclick="showPlayInfo()" title="How to Play">❓</button>
+                    </div>
                 </div>
-                <div id="settings-container" class="all-flex flex-col gap">
-                    <h3>Game Settings</h3>
-                    <div class="settings-option">
-                        <label for="difficulty">Difficulty:</label>
-                        <select id="difficulty" class="settings-select">
-                            <option value="easy">Easy</option>
-                            <option value="medium" selected>Medium</option>
-                            <option value="hard">Hard</option>
-                        </select>
-                    </div>
-                    <div class="settings-option">
-                        <label for="animations">Animations:</label>
-                        <select id="animations" class="settings-select">
-                            <option value="on" selected>On</option>
-                            <option value="off">Off</option>
-                        </select>
-                    </div>
-                    <div class="settings-option">
-                        <label for="sound">Sound:</label>
-                        <select id="sound" class="settings-select">
-                            <option value="on" selected>On</option>
-                            <option value="off">Off</option>
-                        </select>
-                    </div>
-                    <div class="settings-option">
-                        <label for="theme">Theme:</label>
-                        <select id="theme" class="settings-select">
-                            <option value="light" selected>Light</option>
-                            <option value="dark">Dark</option>
-                            <option value="blue">Blue</option>
-                        </select>
-                    </div>
-                    <button class="btn" onclick="saveSettings()">Save Settings</button>
-                </div>
+
                 <div id="select-over" class="all-flex flex-col gap">
                     <h3>Select Over</h3>
                     <div class="Over-container all-flex gap">
