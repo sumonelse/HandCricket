@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline - Hand Cricket</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            background-color: #f5f5f5;
+        }
+
+        .offline-container {
+            max-width: 500px;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .cricket-ball {
+            width: 80px;
+            height: 80px;
+            background-color: #c62828;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+
+        .cricket-ball::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: white;
+            transform: translateY(-50%);
+        }
+
+        .retry-button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .retry-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="offline-container">
+        <div class="cricket-ball"></div>
+        <h1>You're Offline</h1>
+        <p>It looks like you've lost your internet connection. Hand Cricket requires an internet connection to load
+            initially.</p>
+        <p>Once loaded, you can play the game offline!</p>
+        <button class="retry-button" onclick="window.location.reload()">Try Again</button>
+    </div>
+</body>
+
+</html>
