@@ -1,6 +1,6 @@
 const CACHE_NAME = "hand-cricket-v1"
 const urlsToCache = [
-    "./handCricket.html",
+    "./index.html",
     "./handCricket.css",
     "./handCricket.js",
     "./confetti.min.js",
