@@ -7,8 +7,9 @@ const urlsToCache = [
     "./manifest.json",
     "./pwa.js",
     "./offline.html",
-    "./audio/bat-hit.mp3",
-    "./audio/wicket.mp3",
+    "./audio/childrenApplause.mp3",
+    "./audio/awwSound.mp3",
+    "./audio/whistle.wav",
     "./icons/icon-192x192.png",
     "./icons/icon-512x512.png",
 ]
@@ -73,6 +74,8 @@ self.addEventListener("fetch", (event) => {
                     if (event.request.mode === "navigate") {
                         return caches.match("./offline.html")
                     }
+                    // For other resources that might be missing when offline
+                    return new Response("Resource not available offline")
                 })
         })
     )

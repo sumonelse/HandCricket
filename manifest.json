@@ -2,7 +2,7 @@
     "name": "Hand Cricket",
     "short_name": "Hand Cricket",
     "description": "A fun hand cricket game you can play anytime",
-    "start_url": "./handCricket.html",
+    "start_url": "./index.html",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#4CAF50",
