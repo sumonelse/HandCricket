@@ -930,6 +930,19 @@ button:active {
         width: 45px;
         height: 45px;
     }
+
+    /* Adjust Footer */
+    .foot-container {
+        flex-direction: column;
+        align-items: flex-start;
+
+        /* Adjust footer */
+        & .score-wrapper div,
+        & .love {
+            padding: 5px;
+            font-size: 13px;
+        }
+    }
 }
 
 @media (max-width: 540px) {
@@ -1051,12 +1064,5 @@ button:active {
 
     .modal {
         width: 95vw;
-    }
-
-    /* Adjust footer */
-    .score-wrapper div,
-    .love {
-        padding: 5px;
-        font-size: 10px;
     }
 }
